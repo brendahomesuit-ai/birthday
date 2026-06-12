@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Happy Birthday! 獻給我生命中重要的壹</title>
+    <style>
+        :root {
+            --bg-color: #f7f5f0;       /* 溫馨暖米色 */
+            --primary-color: #8c7662;  /* 典雅亞麻棕 */
+            --accent-color: #d9c5b2;   /* 質感淺亞麻 */
+            --gift-box: #FFF2C5;       /* 指定色票：溫馨淺黃色盒身 */
+            --gift-ribbon: #F87878;    /* 指定色票：質感粉紅緞帶 */
+            --card-text: #5a4b3c;      /* 紙片深棕字 */
+            --shadow: rgba(140, 118, 98, 0.15);
+            --shadow-dark: rgba(140, 118, 98, 0.3);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none; /* 防止長按選取文字干擾體驗 */
+        }
+
+        body {
+            background-color: var(--bg-color);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            color: var(--primary-color);
+            overflow-x: hidden;
+            position: relative;
+            min-height: 100vh;
+            padding-bottom: 80px;
+        }
+
+        /* --- 背景裝飾 --- */
+        .background-decorations {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .flower-fall, .balloon {
+            position: absolute;
+            bottom: -100px;
+            animation: floatUp 15s linear infinite;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.6; }
+            90% { opacity: 0.6; }
+            100% { transform: translateY(-120vh) rotate(360deg); opacity: 0; }
+        }
+
+        /* --- 區塊佈局 --- */
+        .container {
+            position: relative;
+            z-index: 2;
+            max-width: 480px;
+            margin: 0 auto;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 80px;
+        }
+
+        .section-title {
+            font-size: 1.15rem;
+            font-weight: 600;
+            margin-bottom: 24px;
+            letter-spacing: 2px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        /* --- 1. 音樂前導區段 --- */
+        .music-section {
+            min-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .music-title-wrap h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            letter-spacing: 4px;
+            margin-bottom: 10px;
+        }
+
+        .music-title-wrap p {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            margin-bottom: 30px;
+        }
+
+        .music-btn {
+            background-color: #ffffff;
+            color: var(--primary-color);
+            border: 1px solid var(--accent-color);
+            padding: 16px 40px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 40px;
+            cursor: pointer;
+            box-shadow: 0 8px 30px var(--shadow);
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        .music-btn.playing {
+            background-color: var(--primary-color);
+            color: #ffffff;
+            border-color: var(--primary-color);
+        }
+
+        /* --- 2. 禮物盒與驚喜卡片區段 --- */
+        .gift-section {
+            width: 100%;
+            height: 100vh;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .gift-title-container {
+            margin-bottom: 70px;
+            text-align: center;
+            transition: opacity 0.4s ease;
+        }
+
+        .slide-hint {
+            font-size: 0.85rem;
+            color: var(--gift-ribbon);
+            margin-top: 10px;
+            animation: pulseText 1.5s infinite ease-in-out;
+        }
+
+        @keyframes pulseText {
+            0%, 100% { opacity: 0.7; transform: translateY(0); }
+            50% { opacity: 1; transform: translateY(-3px); }
+        }
+
+        .gift-wrapper {
+            position: relative;
+            width: 180px;
+            height: 180px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            transition: opacity 0.6s, transform 0.6s;
+        }
+
+        .gift-container {
+            position: relative;
+            width: 160px;
+            height: 130px;
+            z-index: 10;
+        }
+
+        /* 禮物盒優雅抖動 */
+        .gift-container.jiggle {
+            animation: elegantJiggle 0.8s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+        }
+
+        @keyframes elegantJiggle {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(-8deg); }
+            50% { transform: rotate(6deg); }
+            75% { transform: rotate(-4deg); }
+        }
+
+        .gift-box-body {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: var(--gift-box);
+            border-radius: 8px;
+            box-shadow: 0 10px 25px var(--shadow);
+            z-index: 1;
+        }
+
+        .ribbon-vertical {
+            position: absolute;
+            top: 0; left: 65px; width: 30px; height: 100%;
+            background-color: var(--gift-ribbon);
+            z-index: 2;
+            transition: opacity 0.4s;
+        }
+
+        .ribbon-horizontal {
+            position: absolute;
+            top: 50%; left: 0; width: 100%; height: 30px;
+            transform: translateY(-50%);
+            background-color: var(--gift-ribbon);
+            z-index: 2;
+            transition: opacity 0.4s;
+        }
+
+        /* 【核心優化】大蝴蝶結容器：將 margin-bottom 設為 -100px 緊貼並大範圍覆蓋禮物盒身，呈現渾然天成的 3D 咬合疊放視覺 */
+        .gift-bow-container {
+            position: absolute;
+            bottom: 100%;       
+            margin-bottom: -120px; /* 修正：微調定位使其向下覆蓋，緊緊貼合盒頂並疊合覆蓋盒身 */
+            left: 50%;
+            transform: translateX(-50%);
+            width: 155px;
+            height: 118px;
+            z-index: 12;
+            cursor: grab;
+            transition: transform 0.6s cubic-bezier(0.25, 0.8, 0.25, 1), opacity 0.5s ease;
+        }
+        
+        .gift-bow-container svg {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.12));
+        }
+
+        /* 蝴蝶結飛出解開 */
+        .bow-unturned {
+            transform: translate(250px, -120px) rotate(80deg) scale(0.3) !important;
+            opacity: 0 !important;
+            transition: transform 0.8s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
+        }
+
+        .gift-hidden { opacity: 0 !important; pointer-events: none; }
+
+        /* --- 彈出驚喜字條卡片 (畫面絕對居中) --- */
+        .popup-cards {
+            position: absolute;
+            width: 100%; height: 100%; top: 0; left: 0;
+            pointer-events: none; z-index: 15;
+            display: flex; justify-content: center; align-items: center;
+        }
+
+        .note-card {
+            position: absolute;
+            width: 230px; height: 145px;
+            background: #ffffff; border-radius: 12px;
+            padding: 20px; text-align: center;
+            box-shadow: 0 12px 35px var(--shadow);
+            opacity: 0;
+            transform: translate(-50%, -50%) scale(0.5); /* 確保從正中央縮放彈出 */
+            left: 50%; top: 50%;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.2);
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            border-top: 6px solid var(--gift-ribbon);
+            color: var(--card-text);
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .note-card .click-tip { font-size: 0.75rem; color: #b5a89b; margin-top: 10px; }
+        .popup-cards.active .note-card { opacity: 1; pointer-events: auto; }
+
+
+        /* --- 3. 拍立得與捲角便簽區段 --- */
+        .polaroid-section {
+            width: 100%;
+            height: 420px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .polaroid {
+            position: absolute; width: 260px; height: 320px;
+            background: #ffffff; padding: 16px 16px 28px 16px;
+            box-shadow: 0 10px 30px var(--shadow);
+            transform: rotate(-2deg); z-index: 2;
+            border: 1px solid rgba(140, 118, 98, 0.05);
+        }
+
+        .polaroid-img {
+            width: 100%; height: 220px; background-color: #f1ede6;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            color: #a39281; font-size: 0.9rem;
+        }
+
+        .polaroid-caption { margin-top: 16px; text-align: center; font-weight: bold; }
+
+        /* 便簽容器 */
+        .sticky-notes-container {
+            position: absolute; width: 260px; height: 320px; z-index: 3;
+            display: flex; justify-content: center; align-items: center;
+        }
+
+        .sticky-note {
+            position: absolute; width: 260px; height: 320px;
+            padding: 30px 20px; box-shadow: 2px 8px 20px rgba(0,0,0,0.07);
+            cursor: pointer;
+            transition: transform 0.6s cubic-bezier(0.55, 0.055, 0.675, 0.19), opacity 0.5s ease;
+            display: flex; flex-direction: column; justify-content: center;
+            border-radius: 4px;
+            touch-action: none; /* 停用原生手勢，由程式控制確保撕下順暢 */
+        }
+        
+        /* 左下角擬真翻捲翹角效果 (Page Curl) */
+        .sticky-note::after {
+            content: ""; position: absolute; bottom: 0; left: 0;
+            width: 30px; height: 30px;
+            background: linear-gradient(45deg, transparent 50%, #ffffff 50%);
+            box-shadow: 2px -2px 5px rgba(0,0,0,0.05);
+        }
+
+        /* 嚴格控制堆疊層次，確保最上層最先被撕開 (黃 -> 藍 -> 綠) */
+        .note-yellow { background: #fbf5bf; transform: rotate(1.5deg); z-index: 32; }
+        .note-blue   { background: #c9ebf3; transform: rotate(-2.5deg); z-index: 31; }
+        .note-green  { background: #ccc9f2; transform: rotate(2deg); z-index: 30; }
+
+        .sticky-note h4 { font-size: 1rem; margin-bottom: 10px; border-bottom: 1px dashed rgba(0,0,0,0.1); padding-bottom: 6px; color: #4a4035; }
+        .sticky-note p { font-size: 0.85rem; line-height: 1.5; color: #555; }
+
+        /* 撕開飛走特效 */
+        .note-ripped {
+            transform: translate(280px, -120px) rotate(45deg) scale(0.5) !important;
+            opacity: 0 !important;
+            pointer-events: none !important;
+        }
+
+
+        /* --- 4. 網頁刮刮樂區段 --- */
+        .scratch-section { width: 100%; display: flex; flex-direction: column; align-items: center; }
+        
+        .scratch-container {
+            position: relative; width: 280px; height: 280px;
+            background: #ffffff; border-radius: 16px;
+            box-shadow: 0 10px 30px var(--shadow); overflow: hidden;
+        }
+
+        .scratch-secret-text {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            padding: 30px; display: flex; flex-direction: column; justify-content: center;
+            text-align: center; z-index: 1;
+        }
+
+        .scratch-secret-text h3 { font-size: 1.1rem; margin-bottom: 10px; }
+        .scratch-secret-text p { font-size: 0.88rem; line-height: 1.6; color: #6b5e50; }
+
+        #scratchCanvas { position: absolute; top: 0; left: 0; z-index: 2; touch-action: none; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+    <!-- 背景裝飾 -->
+    <div class="background-decorations" id="bgDecorations"></div>
+
+    <div class="container">
+        
+        <!-- 1. 音樂前導 -->
+        <section class="music-section">
+            <div class="music-title-wrap">
+                <h1>🎂HAPPY BIRTHDAY🎂</h1>
+                <p>小彤為你準備的專屬卡片 2026/06</p>
+            </div>
+            <button class="music-btn" id="musicBtn">點一下願望都成真 🥳</button>
+            <audio id="bgAudio" src="D:\Brenda\usb\birthday_card\music.mp3" loop></audio>
+        </section>
+
+        <!-- 2. 禮物盒拆開 -->
+        <section class="gift-section" id="giftSection">
+            <div class="gift-title-container" id="giftTitleGroup">
+                <h3 class="section-title"> 生日禮物猜猜拆🎁 </h3>
+                <div class="slide-hint">👉 右滑蝴蝶結</div>
+            </div>
+            
+            <div class="gift-wrapper" id="giftWrapper">
+                <!-- 蝴蝶結內嵌 SVG -->
+                <div class="gift-bow-container" id="giftBow">
+                    <svg width="100%" height="100%" viewBox="0 0 100 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M36.6759 51.2304C45.7727 39.792 54.3927 36.8401 56.1117 25.7731C57.1436 19.1297 49.4318 17.0589 46.2159 20.7371C43.2725 24.1036 40.2129 29.0123 34.8531 33.7937C32.9775 35.4668 28.7162 38.6852 23.0307 45.3269C21.8335 46.7254 19.2406 51.2262 14.6922 57.1299C10.8398 62.1302 5.23689 65.2475 0.150686 68.8436C-0.636354 69.4001 1.80601 69.6753 4.0801 69.6753C6.3536 69.6753 12.6563 67.7045 10.902 70.0443C9.93 71.3407 3.2004 76.0665 5.23595 76.0367C11.281 75.948 20.7565 72.1645 26.0629 67.0924C31.3694 62.0204 32.9427 55.9246 36.6759 51.2304Z" fill="#E36464"/>
+<path d="M66.9672 54.0792C58.8132 42.4281 51.0866 39.4213 49.5458 28.1485C48.6208 21.3816 55.5333 19.2723 58.4159 23.0189C61.0543 26.448 63.7967 31.448 68.601 36.3182C70.2823 38.0225 74.1019 41.3007 79.1981 48.0659C81.1072 50.6002 82.5953 54.0748 86.6723 60.0883C90.1254 65.1816 92.4298 68.6441 96.9889 72.3071C97.6943 72.8739 95.5051 73.1542 93.4667 73.1542C90.2673 73.1542 89.3194 72.6478 90.8918 75.0312C91.7631 76.3517 94.2552 79.6643 92.4307 79.6339C87.0121 79.5436 81.2366 75.4024 76.4801 70.2361C71.7236 65.0697 70.3134 58.8606 66.9672 54.0792Z" fill="#E36464"/>
+<path d="M49.3489 28.7492C49.3489 31.2611 50.7463 33.5701 52.9808 34.7175C68.6796 42.7795 78.2542 46.6991 89.7951 49.8979C93.6402 50.9636 97.4922 48.3258 97.9833 44.3661C99.6684 30.779 100.265 20.6208 99.8941 6.42412C99.7833 2.18572 95.7629 -0.839619 91.6631 0.241227C74.8565 4.67207 64.6849 8.94222 52.2242 17.364C50.4084 18.5912 49.3489 20.6549 49.3489 22.8465L49.3489 28.7492Z" fill="#F87878"/>
+<path d="M52.0467 29.1796C52.0467 31.4604 50.9042 33.6061 48.9378 34.7616C36.5199 42.0589 26.2781 43.3828 13.0207 48.2255C8.70393 49.8024 3.8685 47.0472 3.44938 42.4705C2.28006 29.7021 1.92651 19.8409 1.96054 6.59632C1.97158 2.30213 5.98067 -0.871866 10.1351 0.214928C24.4787 3.96722 35.496 8.55129 49.0617 17.3706C50.9386 18.5908 52.0467 20.6926 52.0467 22.9313L52.0467 29.1796Z" fill="#F87878"/>
+<path d="M78.5604 25.6346L59.1579 26.6647L58.9039 25.0053L78.5604 25.6346Z" fill="#B34848"/>
+<path d="M23.8315 25.6346L43.234 26.6647L43.4881 25.0053L23.8315 25.6346Z" fill="#B34848"/>
+<path d="M41.7381 21.5272C41.5375 18.417 44.006 15.784 47.1227 15.784H54.5896C57.672 15.784 60.1281 18.3618 59.9791 21.4406L59.5875 29.5342C59.4484 32.4095 57.0766 34.6692 54.198 34.6692H47.6449C44.7997 34.6692 42.4435 32.4601 42.2603 29.6209L41.7381 21.5272Z" fill="#FF8080"/>
+<path d="M48.1963 27.0476L50.2955 34.5736L52.1688 34.584L48.1963 27.0476Z" fill="#D26565"/>
+</svg>
+
+                </div>
+
+                <div class="gift-container" id="giftContainer">
+                    <div class="ribbon-vertical" id="ribbonV"></div>
+                    <div class="ribbon-horizontal" id="ribbonH"></div>
+                    <div class="gift-box-body"></div>
+                </div>
+            </div>
+
+            <!-- 彈出洗牌字條 -->
+            <div class="popup-cards" id="popupCards">
+                <div class="note-card card-1">1️⃣提示一: 生活用品 <br><span class="click-tip">(點擊看下一張)</span></div>
+                <div class="note-card card-2">2️⃣提示二: 智慧科技 <br><span class="click-tip">(點擊看下一張)</span></div>
+                <div class="note-card card-3">3️⃣提示三: 夏天快到了<br><span class="click-tip">(點擊看下一張)</span></div>
+            </div>
+        </section>
+
+        <!-- 3. 便簽與拍立得 -->
+        <section class="polaroid-section">
+            <h3 class="section-title">撕開便簽瞧瞧照片</h3>
+            
+            <div class="polaroid">
+                <img class="polaroid-img" src="D:\Brenda\usb\birthday_card\photo.jpg" alt="我們的照片" style="object-fit: cover;">
+                <div class="polaroid-caption">致：我的唯壹💖</div>
+            </div>
+
+            <div class="sticky-notes-container">
+                <div class="sticky-note note-green" id="noteGreen">
+                    <h4>✈️ 愛你每壹天</h4><p>未來再一起去更多世界的角落</p>
+                </div>
+                <div class="sticky-note note-blue" id="noteBlue">
+                    <h4>🥰 小期許</h4><p>希望你可以天天開心健康 <br>(再撕開一張)</p>
+                </div>
+                <div class="sticky-note note-yellow" id="noteYellow">
+                    <h4>🌟 最重要的人</h4><p>與ni相遇好幸運 <br>(左右滑動撕開我)</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. 刮刮樂 -->
+        <section class="scratch-section">
+            <h3 class="section-title">蛋糕刮刮樂</h3>
+            <div class="scratch-container">
+                <div class="scratch-secret-text">
+                    <h3>💌小彤愛你</h3>
+                    <p>生日快樂！迎來32歲的的你，這一年辛苦了，希望我能一直成為你生活的點綴。無論未來怎麼樣，我都會在你陪在ni身邊！🎂</p>
+                </div>
+                <canvas id="scratchCanvas" width="280" height="280"></canvas>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // --- 背景色塊手繪落花與氣球生成 ---
+        const bgDecorations = document.getElementById('bgDecorations');
+        const leafColors = ['#f3a6b4', '#f9e076', '#d1f2eb'];
+        for (let i = 0; i < 18; i++) {
+            const el = document.createElement('div');
+            const isBalloon = Math.random() > 0.6;
+            
+            if (isBalloon) {
+                el.className = 'balloon';
+                const bColor = leafColors[Math.floor(Math.random() * leafColors.length)];
+                el.innerHTML = `
+                    <svg width="24" height="42" viewBox="0 0 32 52">
+                        <ellipse cx="16" cy="18" rx="12" ry="15" fill="${bColor}" opacity="0.65" />
+                        <polygon points="16,31 13,34 19,34" fill="${bColor}" opacity="0.65" />
+                        <path d="M16,34 Q14,39 16,44 T14,50" fill="none" stroke="#8c7662" stroke-width="1.2" opacity="0.3" />
+                    </svg>
+                `;
+            } else {
+                el.className = 'flower-fall';
+                const petalColor = leafColors[Math.floor(Math.random() * leafColors.length)];
+                const centerColor = petalColor === '#f3a6b4' ? '#f9e076' : '#f3a6b4';
+                el.innerHTML = `
+                    <svg width="24" height="24" viewBox="0 0 24 24">
+                        <path d="M12 7.5 C10.5 5, 7 5.5, 8 8.5 C5.5 8, 5 11, 7.5 12 C5.5 13.5, 7.5 16.5, 10 15.5 C11.5 18, 15 17.5, 14 14.5 C16.5 15, 17 12, 14.5 11 C16.5 9.5, 14.5 6.5, 12 7.5 Z" fill="${petalColor}" opacity="0.75" />
+                        <circle cx="11.5" cy="11.5" r="2.5" fill="${centerColor}" opacity="0.9" />
+                    </svg>
+                `;
+            }
+            el.style.left = Math.random() * 100 + '%';
+            el.style.animationDelay = Math.random() * 8 + 's';
+            el.style.animationDuration = (10 + Math.random() * 8) + 's';
+            bgDecorations.appendChild(el);
+        }
+
+        // --- 1. 音樂前導與自動滾動 ---
+        const musicBtn = document.getElementById('musicBtn');
+        const bgAudio = document.getElementById('bgAudio');
+        musicBtn.addEventListener('click', () => {
+            if (bgAudio.paused) {
+                bgAudio.play();
+                musicBtn.classList.add('playing');
+                musicBtn.innerText = '祝ni生日快樂 🎵';
+                setTimeout(() => document.getElementById('giftSection').scrollIntoView({ behavior: 'smooth', block: 'center' }), 500);
+            } else {
+                bgAudio.pause();
+                musicBtn.classList.remove('playing');
+                musicBtn.innerText = '點一下願望都成真 🥳';
+            }
+        });
+
+        // --- 2. 拆禮物核心互動 ---
+        const giftBow = document.getElementById('giftBow');
+        let giftOpened = false;
+
+        const openGift = () => {
+            if(giftOpened) return;
+            giftOpened = true;
+            
+            // 啟用平滑過渡動畫讓蝴蝶結飛走
+            giftBow.style.transition = 'transform 0.8s cubic-bezier(0.25, 0.8, 0.25, 1), opacity 0.5s ease';
+            giftBow.classList.add('bow-unturned');
+            
+            setTimeout(() => {
+                document.getElementById('ribbonV').style.opacity = '0';
+                document.getElementById('ribbonH').style.opacity = '0';
+            }, 100);
+
+            setTimeout(() => {
+                document.getElementById('giftContainer').classList.add('jiggle');
+                setTimeout(() => {
+                    document.getElementById('giftWrapper').classList.add('gift-hidden');
+                    document.getElementById('giftTitleGroup').classList.add('gift-hidden');
+                    setTimeout(() => {
+                        document.getElementById('popupCards').classList.add('active');
+                        updateCards();
+                    }, 400);
+                }, 900);
+            }, 400);
+        };
+
+        // --- 蝴蝶結手勢與滑鼠拖曳邏輯 ---
+        let isDraggingBow = false;
+        let bowStartX = 0;
+
+        const startBowDrag = (clientX) => {
+            if (giftOpened) return;
+            isDraggingBow = true;
+            bowStartX = clientX;
+            giftBow.style.cursor = 'grabbing';
+            giftBow.style.transition = 'none'; // 拖曳時停用 CSS 過渡，確保極致貼手
+        };
+
+        const moveBowDrag = (clientX, e) => {
+            if (!isDraggingBow || giftOpened) return;
+            const deltaX = clientX - bowStartX;
+
+            if (deltaX > 0) {
+                // 限制最大拖曳位移避免飛出畫面，並即時渲染位移效果
+                const boundedX = Math.min(deltaX, 100);
+                giftBow.style.transform = `translateX(calc(-50% + ${boundedX}px))`;
+                
+                // 拖曳向右超過 60px 即可解鎖
+                if (deltaX > 60) {
+                    isDraggingBow = false;
+                    giftBow.style.cursor = 'grab';
+                    openGift();
+                }
+            }
+        };
+
+        const endBowDrag = () => {
+            if (giftOpened) return;
+            isDraggingBow = false;
+            giftBow.style.cursor = 'grab';
+            // 手放開時若未達標，優雅彈回原位
+            giftBow.style.transition = 'transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+            giftBow.style.transform = 'translateX(-50%)';
+        };
+
+        // 綁定點擊防呆
+        giftBow.addEventListener('click', () => {
+            if (!giftOpened && !isDraggingBow) openGift();
+        });
+
+        // 綁定觸控手勢 (特別注意 touchmove 的 passive: false 以阻擋頁面干擾)
+        giftBow.addEventListener('touchstart', e => startBowDrag(e.touches[0].clientX), {passive: true});
+        giftBow.addEventListener('touchmove', e => {
+            if (isDraggingBow && e.cancelable) e.preventDefault();
+            moveBowDrag(e.touches[0].clientX, e);
+        }, {passive: false});
+        giftBow.addEventListener('touchend', endBowDrag);
+
+        // 綁定滑鼠拖曳
+        giftBow.addEventListener('mousedown', e => startBowDrag(e.clientX));
+        window.addEventListener('mousemove', e => moveBowDrag(e.clientX, e));
+        window.addEventListener('mouseup', endBowDrag);
+
+        // 驚喜字條洗牌算法
+        const cards = Array.from(document.querySelectorAll('.note-card'));
+        function updateCards() {
+            cards.forEach((card, i) => {
+                card.style.zIndex = 25 - i;
+                card.style.transform = `translate(-50%, -50%) rotate(${i === 0 ? 0 : (i === 1 ? 4 : -3)}deg) scale(${1 - i * 0.05})`;
+                card.style.opacity = i === 0 ? '1' : '0.9';
+                card.style.pointerEvents = i === 0 ? 'auto' : 'none';
+            });
+        }
+        cards.forEach(card => {
+            card.addEventListener('click', () => {
+                if(cards[0] !== card) return;
+                card.style.transform = 'translate(-320px, -50%) rotate(-25deg) scale(0.6)';
+                card.style.opacity = '0';
+                setTimeout(() => { cards.push(cards.shift()); updateCards(); }, 300);
+            });
+        });
+
+
+        // --- 3. 便簽依序撕開邏輯 ---
+        const noteOrder = [
+            document.getElementById('noteYellow'),
+            document.getElementById('noteBlue'),
+            document.getElementById('noteGreen')
+        ];
+        let currentPeelIndex = 0;
+
+        noteOrder.forEach((note, index) => {
+            let startX = 0, startY = 0;
+            let isDragging = false;
+
+            const startDrag = (x, y) => {
+                if (index !== currentPeelIndex) return;
+                startX = x; startY = y;
+                isDragging = true;
+            };
+
+            const moveDrag = (x, y, e) => {
+                if (!isDragging || index !== currentPeelIndex) return;
+                const moveX = x - startX;
+                const moveY = y - startY;
+
+                if (Math.abs(moveX) > 10 || Math.abs(moveY) > 10) {
+                    if (e && e.cancelable) e.preventDefault(); 
+                }
+
+                if (Math.abs(moveX) > 50 || Math.abs(moveY) > 50) {
+                    isDragging = false;
+                    ripNote();
+                }
+            };
+
+            const ripNote = () => {
+                if (index !== currentPeelIndex) return;
+                note.classList.add('note-ripped');
+                currentPeelIndex++;
+            };
+
+            note.addEventListener('touchstart', e => startDrag(e.touches[0].clientX, e.touches[0].clientY), { passive: true });
+            note.addEventListener('touchmove', e => moveDrag(e.touches[0].clientX, e.touches[0].clientY, e), { passive: false });
+            note.addEventListener('touchend', () => isDragging = false);
+
+            note.addEventListener('mousedown', e => startDrag(e.clientX, e.clientY));
+            window.addEventListener('mousemove', e => moveDrag(e.clientX, e.clientY, null));
+            window.addEventListener('mouseup', () => isDragging = false);
+            note.addEventListener('click', ripNote);
+        });
+
+
+        // --- 4. 【加寬精美生日蛋糕】高解析度刮刮樂邏輯 ---
+        const canvas = document.getElementById('scratchCanvas');
+        const ctx = canvas.getContext('2d');
+        let isScratching = false;
+
+        // 導入設備像素比解決 Retina/High-DPI 螢幕上的模糊問題
+        const dpr = window.devicePixelRatio || 1;
+        const logicalWidth = 280;
+        const logicalHeight = 280;
+        
+        canvas.width = logicalWidth * dpr;
+        canvas.height = logicalHeight * dpr;
+        canvas.style.width = logicalWidth + 'px';
+        canvas.style.height = logicalHeight + 'px';
+        ctx.scale(dpr, dpr);
+
+        function initScratchCover() {
+            // A. 底層質感灰色塗層
+            ctx.fillStyle = '#c5b6a7'; 
+            ctx.fillRect(0, 0, logicalWidth, logicalHeight);
+
+            // B. 設定精細手繪線條樣式
+            ctx.strokeStyle = '#ffffff';
+            ctx.lineWidth = 2.5;
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+            ctx.fillStyle = '#ffffff';
+
+            // 輔助繪製連續圓弧奶油滾邊的函式
+            function drawFrosting(startX, startY, endX, numWaves, waveHeight, isUpward = false) {
+                ctx.beginPath();
+                ctx.moveTo(startX, startY);
+                const step = (endX - startX) / numWaves;
+                const dir = isUpward ? -1 : 1;
+                for (let i = 0; i < numWaves; i++) {
+                    const cp1x = startX + i * step + step * 0.25;
+                    const cp1y = startY + waveHeight * dir;
+                    const cp2x = startX + i * step + step * 0.75;
+                    const cp2y = startY + waveHeight * dir;
+                    const x = startX + (i + 1) * step;
+                    ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, startY);
+                }
+                ctx.stroke();
+            }
+
+            // 1. 三根蠟燭與發光圈 (繪製於頂部居中)
+            const candleX = [115, 140, 165];
+            const candleY = 65;
+            const candleHeight = 22;
+
+            candleX.forEach(x => {
+                // 燭身
+                ctx.beginPath();
+                ctx.moveTo(x, candleY);
+                ctx.lineTo(x, candleY - candleHeight);
+                ctx.stroke();
+
+                // 燭芯
+                ctx.beginPath();
+                ctx.moveTo(x, candleY - candleHeight);
+                ctx.lineTo(x, candleY - candleHeight - 4);
+                ctx.stroke();
+
+                // 發光圈與燭火核心
+                ctx.save();
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.25)'; // 外圍大光暈
+                ctx.beginPath();
+                ctx.arc(x, candleY - candleHeight - 9, 10, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.9)'; // 內圍亮火苗
+                ctx.beginPath();
+                ctx.moveTo(x, candleY - candleHeight - 4);
+                ctx.bezierCurveTo(x - 3, candleY - candleHeight - 7, x - 2, candleY - candleHeight - 14, x, candleY - candleHeight - 15);
+                ctx.bezierCurveTo(x + 2, candleY - candleHeight - 14, x + 3, candleY - candleHeight - 7, x, candleY - candleHeight - 4);
+                ctx.fill();
+                ctx.restore();
+            });
+
+            // 2. 上層蛋糕 (高度: 65 ~ 110，寬度加寬為 80 ~ 200，留出優雅空隙)
+            ctx.beginPath();
+            ctx.moveTo(80, 65);
+            ctx.lineTo(200, 65);  // 頂面
+            ctx.lineTo(200, 110); // 右側邊
+            ctx.lineTo(80, 110);  // 左側邊
+            ctx.closePath();
+            ctx.stroke();
+
+            // 上層頂部與底部奶油滾邊 (隨加寬寬度調整起點與終點)
+            drawFrosting(80, 65, 200, 6, 6, true);
+            drawFrosting(80, 110, 200, 6, 5, false);
+
+            // 3. 【優化加寬】下層蛋糕 (高度: 110 ~ 175，寬度加寬至 50 ~ 230，蛋糕兩側完美保留空隙)
+            ctx.beginPath();
+            ctx.moveTo(50, 110);
+            ctx.lineTo(230, 110); // 交界頂面
+            ctx.lineTo(230, 175); // 右側邊
+            ctx.lineTo(50, 175);  // 左側邊
+            ctx.closePath();
+            ctx.stroke();
+
+            // 下層交界處與底部奶油滾邊 (隨寬度自適應起點與終點)
+            drawFrosting(50, 110, 230, 9, 6, true);
+            drawFrosting(50, 175, 230, 9, 6, false);
+
+            // 4. 蛋糕托盤 (高度: 175 ~ 182，寬度隨下層蛋糕等比例調整為 30 ~ 250，整體不貼邊)
+            ctx.beginPath();
+            ctx.moveTo(30, 175);
+            ctx.lineTo(250, 175);
+            ctx.lineTo(240, 182);
+            ctx.lineTo(40, 182);
+            ctx.closePath();
+            ctx.stroke();
+
+            // 5. 【核心修正】Happy Birthday! 手寫字樣 (精準移入下層蛋糕主體內部，y 設在 148 處，字體清晰)
+            ctx.save();
+            ctx.fillStyle = '#ffffff';
+            ctx.font = 'italic bold 19px "Georgia", sans-serif'; 
+            ctx.textAlign = 'center';
+            ctx.shadowColor = 'rgba(0, 0, 0, 0.25)';
+            ctx.shadowBlur = 4;
+            ctx.fillText('Happy Birthday!', logicalWidth / 2, 148);
+            ctx.restore();
+
+            // 6. 刮刮樂提示小字 (高解析度清晰化處理，移到下方 235 處)
+            ctx.save();
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.85)';
+            ctx.font = 'bold 13px sans-serif'; 
+            ctx.textAlign = 'center';
+            ctx.fillText('✨ 輕輕刮開蛋糕 ✨', logicalWidth / 2, 235);
+            ctx.restore();
+        }
+
+        // 初始化畫布
+        initScratchCover();
+
+        const scratch = (e) => {
+            if (!isScratching) return;
+            const rect = canvas.getBoundingClientRect();
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+            
+            // 考慮 Retina 高解析度 Scale 縮放時的精確映射
+            const canvasX = ((clientX - rect.left) / rect.width) * logicalWidth;
+            const canvasY = ((clientY - rect.top) / rect.height) * logicalHeight;
+
+            ctx.globalCompositeOperation = 'destination-out';
+            ctx.beginPath();
+            ctx.arc(canvasX, canvasY, 22, 0, Math.PI * 2);
+            ctx.fill();
+        };
+
+        canvas.addEventListener('mousedown', () => isScratching = true);
+        window.addEventListener('mouseup', () => isScratching = false);
+        window.addEventListener('mousemove', scratch);
+        
+        canvas.addEventListener('touchstart', (e) => { isScratching = true; scratch(e); }, {passive: true});
+        canvas.addEventListener('touchend', () => isScratching = false);
+        canvas.addEventListener('touchmove', (e) => { 
+            if(isScratching && e.cancelable) e.preventDefault(); 
+            scratch(e); 
+        }, {passive: false});
+
+    </script>
+</body>
+</html>
